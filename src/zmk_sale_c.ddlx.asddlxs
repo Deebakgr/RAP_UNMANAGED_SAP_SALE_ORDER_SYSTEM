@@ -1,0 +1,104 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'Sales Order',
+    typeNamePlural: 'Sales Orders',
+    title: { type: #STANDARD, label: 'Sales Order', value: 'SalesDocument' }
+  }
+}
+annotate entity ZMK_SALE_C with
+{
+  @UI.facet: [
+    {
+      id: 'SalesHeader',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Sales Details',
+      position: 10
+    },
+    {
+      id: 'SalesItems',
+      purpose: #STANDARD,
+      type: #LINEITEM_REFERENCE,
+      label: 'Item Details',
+      position: 20,
+      targetElement: '_salesitem'
+    }
+  ]
+  @UI: { lineItem:       [ { position: 10, label: 'Sales Document' },
+                           { type: #FOR_ACTION, dataAction: 'GenerateInvoice', label: 'Generate Invoice' } ],
+         identification: [ { position: 10, label: 'Sales Document' },
+                           { type: #FOR_ACTION, dataAction: 'GenerateInvoice', label: 'Generate Invoice' } ],
+         selectionField: [ { position: 10 } ] }
+  SalesDocument;
+
+  @UI: { lineItem: [{position: 20, label: 'Document Type'}],
+         identification: [{position: 20, label: 'Document Type'}],
+         selectionField: [{position: 20}] }
+  SalesDocumentType;
+
+  @UI: { lineItem: [{position: 30, label: 'Order Reason'}],
+         identification: [{position: 30, label: 'Order Reason'}],
+         selectionField: [{position: 30}] }
+  OrderReason;
+
+  @UI: { lineItem: [{position: 40, label: 'Sales Org'}],
+         identification: [{position: 40, label: 'Sales Org'}] }
+  SalesOrganization;
+
+  @UI: { lineItem: [{position: 50, label: 'Dist. Channel'}],
+         identification: [{position: 50, label: 'Dist. Channel'}],
+         selectionField: [{position: 50}] }
+  DistributionChannel;
+
+  @UI: { lineItem: [{position: 60, label: 'Division'}],
+         identification: [{position: 60, label: 'Division'}],
+         selectionField: [{position: 60}] }
+  Division;
+
+  @UI: { lineItem: [{position: 70, label: 'Sales Office'}],
+         identification: [{position: 70, label: 'Sales Office'}],
+         selectionField: [{position: 70}] }
+  SalesOffice;
+
+  @UI: { lineItem: [{position: 80, label: 'Sales Group'}],
+         identification: [{position: 80, label: 'Sales Group'}] }
+  SalesGroup;
+
+  @UI: { lineItem: [{position: 90, label: 'Net Price'}],
+         identification: [{position: 90, label: 'Net Price'}] }
+  NetPrice;
+
+  @UI: { lineItem: [{position: 100, label: 'Currency'}],
+         identification: [{position: 100, label: 'Currency'}] }
+  Currency;
+
+  // --- PDF Invoice Attachment ---
+  @UI: { lineItem:       [ { position: 110, label: 'Invoice Attachment' } ],
+         identification: [ { position: 110, label: 'Invoice Attachment' } ] }
+  Attachment;
+
+  @UI.hidden: true
+  MimeType;
+
+  @UI.hidden: true
+  FileName;
+
+  // --- Excel Attachment ---
+  @UI: { lineItem:       [ { position: 120, label: 'Excel Attachment' } ],
+         identification: [ { position: 120, label: 'Excel Attachment' } ] }
+  ExcelAttachment;
+
+  @UI.hidden: true
+  ExcelMimeType;
+
+  @UI.hidden: true
+  ExcelFileName;
+
+  // --- Admin Fields ---
+  @UI: { identification: [{position: 130, label: 'Created By'}] }
+  LocalCreatedBy;
+
+  @UI: { identification: [{position: 140, label: 'Created At'}] }
+  LocalCreatedAt;
+}

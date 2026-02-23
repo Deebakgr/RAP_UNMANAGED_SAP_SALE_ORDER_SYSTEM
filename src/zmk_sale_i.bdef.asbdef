@@ -1,0 +1,96 @@
+unmanaged implementation in class zbp_mk_sale_i unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZMK_SALE_I alias SalesOrderHdr
+implementation in class zbp_mk_sale_hdr unique
+draft table zmk_sale_hdr_d
+lock master total etag LocalLastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  action GenerateInvoice result [1] $self;
+
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+  draft action Activate optimized;
+  draft action Discard;
+
+  field ( mandatory : create ) SalesDocument;
+  field ( readonly : update ) SalesDocument;
+
+  // Existing Invoice fields are Read-Only (System Generated)
+  field ( readonly ) Attachment, MimeType, FileName;
+
+  // Note: ExcelAttachment is NOT read-only, so users can upload files.
+
+  field ( readonly ) LocalLastChangedAt;
+
+  association _salesitem { create; with draft; }
+
+  mapping for ZMK_DEEBAK_T
+  {
+    SalesDocument         = salesdocument;
+    SalesDocumentType     = salesdocumenttype;
+    OrderReason           = orderreason;
+    SalesOrganization     = salesorganization;
+    DistributionChannel   = distributionchannel;
+    Division              = division;
+    SalesOffice           = salesoffice;
+    SalesGroup            = salesgroup;
+    NetPrice              = netprice;
+    Currency              = currency;
+    LocalCreatedBy        = local_created_by;
+    LocalCreatedAt        = local_created_at;
+    LocalLastChangedBy    = local_last_changed_by;
+    LocalLastChangedAt    = local_last_changed_at;
+
+    // --- 1. EXISTING INVOICE MAPPING ---
+    Attachment            = attachment;
+    MimeType              = mimetype;
+    FileName              = filename;
+
+    // --- 2. NEW EXCEL UPLOAD MAPPING ---
+    ExcelAttachment       = excel_attachment;
+    ExcelMimeType         = excel_mimetype;
+    ExcelFileName         = excel_filename;
+    // -----------------------------------
+  }
+}
+
+define behavior for ZMK_SALE_O alias SalesOrderItm
+implementation in class zbp_mk_sale_itm unique
+draft table zmk_sale_itm_d
+lock dependent by _salesHeader
+authorization dependent by _salesHeader
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly : update, mandatory : create ) SalesItemnumber;
+  field ( readonly ) SalesDocument;
+
+  association _salesHeader { with draft; }
+
+  mapping for ZMK_DEEPAK_T
+  {
+    SalesDocument         = salesdocument;
+    SalesItemnumber       = salesitemnumber;
+    Material              = material;
+    Plant                 = plant;
+    Quantity              = quantity;
+    Quantityunits         = quantityunits;
+    NetPrice              = netprice;
+    Currency              = currency;
+    LocalCreatedBy        = local_created_by;
+    LocalCreatedAt        = local_created_at;
+    LocalLastChangedBy    = local_last_changed_by;
+    LocalLastChangedAt    = local_last_changed_at;
+  }
+}

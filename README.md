@@ -89,4 +89,7 @@ The application follows the **RAP Unmanaged architecture**:
 | Total_Amount  | Total order value               |
 
 ---
+## Invoice output
+<img width="583" height="313" alt="image" src="https://github.com/user-attachments/assets/faf704df-3276-48f3-af41-5215b8773df7" />
+
 
